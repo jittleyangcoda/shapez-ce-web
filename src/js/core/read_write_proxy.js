@@ -132,13 +132,18 @@ export class ReadWriteProxy {
 
                 // Check for errors during read
                 .catch(err => {
-                    if (err instanceof FsError && err.isFileNotFound()) {
-                        logger.log("File not found, using default data");
+                    // Handle missing file in both Electron and Browser
+                    const isMissing =
+                        (err instanceof FsError && err.isFileNotFound()) ||
+                        (typeof err.isFileNotFound === "function" && err.isFileNotFound()) ||
+                        (err.message && err.message.includes("file-not-found"));
 
-                        // File not found or unreadable, assume default file
+                    if (isMissing) {
+                        logger.log("File not found, using default data");
                         return Promise.resolve(this.getDefaultData());
                     }
 
+                    logger.error("Unexpected storage read error:", err);
                     return Promise.reject("file-error: " + err);
                 })
 

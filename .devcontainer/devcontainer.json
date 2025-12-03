@@ -1,0 +1,8 @@
+{
+    "name": "My App",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {},
+        "ghcr.io/devcontainers-extra/features/ffmpeg-apt-get:1": {}
+    }
+}
